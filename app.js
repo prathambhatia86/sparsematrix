@@ -30,29 +30,32 @@ create_random_strings=()=>{
       mapping.set(name,pincodes);
     }
 }
-
+check_entries=(merchantName,Pincode)=>{
+    if(mapping.has(merchantName))
+    {
+        let temp=new Set();
+        temp=mapping.get(merchantName);
+        if(temp.has(Pincode))
+        return 1;
+        else
+        return 0;
+    }
+    else
+    {
+        return -1;
+    };
+}
 app.post("/addRandomEntries",async(req,res)=>{
     create_random_pincodes();
     create_random_strings();
     console.log(names.length);
     res.send(true);
 })
+app.post("/checkEntries",async(req,res)=>{
+    const status=check_entries(req.body.merchantName,req.body.pinCode);
+    res.json({status:status});
+})
 
-// check_entries=()=>{
-// if(mapping.has(names[1000000]))
-// {
-//     let temp=new Set();
-//     temp=mapping.get(names[100000]);
-//     if(temp.has(a))
-//     console.log("the pin facility is available with the particular merchant");
-//     else
-//     console.log("the merchant dont deliver to this location");
-// }
-// else
-// {
-//     console.log("this merchant does not exist or has not enabled pincode facility");
-// }
-// };
 
 // check_entries();
 app.listen(8000,()=>{
