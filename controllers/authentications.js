@@ -23,6 +23,29 @@ console.log(data);
 let result=await redis.set(username,data);
 res.send(result);
 }
+const doLogin=async(req,res)=>{
+    const username=req.body.username
+    const password=req.body.password
+    redis.get(username, (err, userData) => {
+        if (err) {
+          return res.status(500).json({ error: 'Error retrieving data from Redis' });
+        }
+    
+        if (!userData) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+        const userObject = JSON.parse(userData);
+        if(userObject.password==password)
+        {
+            res.send("success");
+        }
+        else
+        {
+            res.send("incorrect");
+        }
+      });
+    };
+    
 module.exports={
-    addMerchant,
+    addMerchant,doLogin,
 }

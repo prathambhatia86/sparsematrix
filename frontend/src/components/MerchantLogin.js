@@ -1,7 +1,27 @@
+import {React,useState} from "react";
 import {Route,Link} from "wouter";
+import axios from "axios";
 export default function MerchantLogin()
 {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+  const doLogin=async()=>{
+    const data={
+      "username":username,
+      "password":password
+  }
+  let result = await axios.post("http://localhost:8000/doLogin", data);
+  console.log(result);
+  }
 return (
+
     <div className="container mt-5">
       <div className="card mx-auto" style={{ maxWidth: '400px' }}>
         <div className="card-header bg-primary text-white">Login</div>
@@ -14,6 +34,8 @@ return (
                 className="form-control"
                 id="username"
                 placeholder="Enter your username"
+                value={username}
+                onChange={handleUsernameChange}
                 required
               />
             </div>
@@ -24,10 +46,12 @@ return (
                 className="form-control"
                 id="password"
                 placeholder="Enter your password"
+                value={password}
+                onChange={handlePasswordChange}
                 required
               />
             </div>
-            <button type="submit" className="btn btn-primary btn-block">
+            <button type="button" onClick={doLogin} className="btn btn-primary btn-block">
               Login
             </button>
           </form>

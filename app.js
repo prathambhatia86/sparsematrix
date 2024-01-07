@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: false, limit: "50mb" }))
 
 
 const { doesServe, getMerchants, getPincodes } = require('./controllers/some');
-const {addMerchant}=require('./controllers/authentications');
+const {addMerchant,doLogin}=require('./controllers/authentications');
 // Start the server after initialization, if not initiliased, please see init.js
 
 //Check if this merchant serves this pincode
@@ -22,7 +22,7 @@ app.post("/getMerchantsByPincode", getMerchants)
 //Retrieve pincodes serviced by  a merchant
 app.post("/getPincodesForMerchant", getPincodes)
 app.post("/addMerchant",addMerchant)
-
+app.post("/doLogin",doLogin);
 //Start up the server
 app.listen(8000, () => {
     console.log('Server is running on port 3000');
