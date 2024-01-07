@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import RingLoader from "react-spinners/RingLoader";
 import Pincode from './Pincode';
-
+import { Link, Route } from "wouter";
+import MerchantLogin from './MerchantLogin';
 export default function Home() {
 	const [showEntriesDialog, setShowEntriesDialog] = useState(false);
 	const [pinCode, updatePinCode] = useState(0);
@@ -55,6 +56,8 @@ export default function Home() {
 				<button type="submit" className="btn btn-secondary" onClick={addRandomEntries}>Add Random Entries</button>
 			</div>
 			<Pincode />
+			<Link href='/MerchantLogin'><button  className="btn btn-secondary" >Jump to merchant page!</button></Link>
+			
 		</>
 
 	)

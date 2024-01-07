@@ -1,12 +1,30 @@
 const randomstring = require('randomstring');
 const Redis = require("ioredis");
-var redis = new Redis();
+const _=require("underscore");
+var redis = new Redis(
+    {
+        password: 'rXB1Jrg9p21qLCeRRsdxnfMY0nBcxSu7',
+       
+            host: 'redis-12222.c274.us-east-1-3.ec2.cloud.redislabs.com',
+            port: 12222
+        
+    }
+);
+// redis.flushall((err, result) => {
+//     if (err) {
+//       console.error('Error flushing all databases:', err);
+//     } else {
+//       console.log('All entries removed from all databases:', result);
+//     }
+// }
+// )
+  
 //Replace app.listen(.....) with these lines if datastore has not been initialised
 class Init {
     pincodes = new Set();
     createRandomPincodes = async () => {
         //Generate 30k pincodes randomly
-        for (let i = 0; this.pincodes.size < 30000; i++) {
+        for (let i = 0; this.pincodes.size < 100; i++) {
             const randomSixDigitNumber = Math.floor(100000 + Math.random() * 900000);
             this.pincodes.add(randomSixDigitNumber);
         }
@@ -19,7 +37,7 @@ class Init {
     createRandomMerchants = async () => {
         const names = new Set();
         //Replace with the desired number of merchants
-        for (let i = 0; names.size < 10000; i++) {
+        for (let i = 0; names.size < 10; i++) {
             const name = randomstring.generate({
                 length: 10,
                 charset: 'alphabetic'
@@ -48,7 +66,8 @@ async function init() {
     }
 }
 init().then(() => {
-    app.listen(8000, () => {
-        console.log('Server is running on port 3000');
-    });
+    // app.listen(8000, () => {
+    //     console.log('Server is running on port 3000');
+    // });
+    console.log("done!")
 });

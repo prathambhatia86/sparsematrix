@@ -1,5 +1,14 @@
 const Redis = require("ioredis");
-var redis = new Redis();
+var redis = new Redis(
+    {
+        password: 'rXB1Jrg9p21qLCeRRsdxnfMY0nBcxSu7',
+       
+            host: 'redis-12222.c274.us-east-1-3.ec2.cloud.redislabs.com',
+            port: 12222
+        
+    }
+);
+
 // Return true if merchant serves this pincode
 const checkEntries = async (merchantName, Pincode) => {
     //Better to check merchant set, smaller is size probably?
