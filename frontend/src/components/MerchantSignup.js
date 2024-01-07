@@ -1,6 +1,37 @@
 import {Route,Link} from "wouter";
+import {React,useState} from "react";
+import axios from "axios";
 export default function MerchantSignup()
 {
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [city, setCity] = useState('');
+      const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleCityChange = (e) => {
+    setCity(e.target.value);
+  };
+  const addSignup=async()=>{
+    const data={
+        "name":name,
+        "username":username,
+        "password":password,
+        "city":city
+    }
+    let result = await axios.post("http://localhost:8000/addMerchant", data);
+    console.log(result);
+  }
     return(
 
         <div className="container mt-5">
@@ -15,6 +46,8 @@ export default function MerchantSignup()
                   className="form-control"
                   id="name"
                   placeholder="Enter your name"
+                  value={name}
+                onChange={handleNameChange}
                   required
                 />
               </div>
@@ -25,6 +58,8 @@ export default function MerchantSignup()
                   className="form-control"
                   id="username"
                   placeholder="Enter a unique username"
+                  value={username}
+                onChange={handleUsernameChange}
                   required
                 />
               </div>
@@ -35,6 +70,8 @@ export default function MerchantSignup()
                   className="form-control"
                   id="password"
                   placeholder="Enter your password"
+                  value={password}
+                  onChange={handlePasswordChange}
                   required
                 />
               </div>
@@ -45,10 +82,12 @@ export default function MerchantSignup()
                   className="form-control"
                   id="city"
                   placeholder="Enter your city"
+                  value={city}
+                  onChange={handleCityChange}
                   required
                 />
               </div>
-              <button type="submit" className="btn btn-success btn-block">
+              <button type="button" onClick={addSignup} className="btn btn-success btn-block">
                 Sign Up
               </button>
             </form>
