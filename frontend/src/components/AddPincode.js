@@ -5,17 +5,21 @@ export default function AddPincode()
 {
     let [currentPincodes,alterCurrentPincodes]=useState([]);
     let [pinCode,changePinCode]=useState();
-    // useEffect(()=>{
+    let [details,changeDetails]=useState({});
+    useEffect(()=>{
 
-    //     let getPincodes=async()=>{let data={
-    //         "merchantName":"hehe@gmail.com"
-    //     }
-    //     let existingPincodes = await axios.post("http://localhost:8000/getPincodesForMerchant",data);
-    //     console.log(existingPincodes);
-    //     return existingPincodes;
-    // }
-    // getPincodes();
-    // },[]);
+        let getPincodes=async()=>{
+            let data={
+            "merchantName":"hehe@gmail.com"
+        }
+        let existingPincodes = await axios.post("http://localhost:8000/getPincodesForMerchant",data);
+        existingPincodes=await JSON.parse(existingPincodes.data.data);
+        alterCurrentPincodes(existingPincodes.pins);
+        changeDetails(existingPincodes);
+        
+    }
+    getPincodes();
+    },[]);
     const addTempPincode=()=>{
         alterCurrentPincodes((prev)=>{
             let newPinArray=[...prev,pinCode];
@@ -33,6 +37,12 @@ export default function AddPincode()
     };
     const changePincode=(e)=>{
         changePinCode(e.target.value);
+    }
+    const savePincodes=async()=>{
+        let data=details
+        data.pins=currentPincodes
+        data.username="hehe@gmail.com"
+        await axios.post("http://localhost:8000/updateMerchantDetails",data);
     }
     return(
     <>
@@ -62,7 +72,7 @@ export default function AddPincode()
                 }
             </ul>
             
-            <button class="btn btn-success mt-3 float-right" >Save</button>
+            <button class="btn btn-success mt-3 float-right" onClick={savePincodes} >Save</button>
         </div>
     </div>
 </div>

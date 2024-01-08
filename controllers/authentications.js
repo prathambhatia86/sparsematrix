@@ -16,7 +16,8 @@ const city=req.body.city
 let data={
     "name":name,
     "password":password,
-    "city":city
+    "city":city,
+    "pins":[]
 }
 data=JSON.stringify(data);
 console.log(data);

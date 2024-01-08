@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: false, limit: "50mb" }))
 // app.use(express.static(path.join(__dirname, 'frontend.html')))
 
 
-const { doesServe, getMerchants, getPincodes } = require('./controllers/some');
+const { doesServe, getMerchants, getPincodes,updateMerchant } = require('./controllers/some');
 const {addMerchant,doLogin}=require('./controllers/authentications');
 // Start the server after initialization, if not initiliased, please see init.js
 
@@ -23,6 +23,7 @@ app.post("/getMerchantsByPincode", getMerchants)
 app.post("/getPincodesForMerchant", getPincodes)
 app.post("/addMerchant",addMerchant)
 app.post("/doLogin",doLogin);
+app.post("/updateMerchantDetails",updateMerchant);
 //Start up the server
 app.listen(8000, () => {
     console.log('Server is running on port 3000');
