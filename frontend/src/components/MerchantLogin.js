@@ -1,10 +1,12 @@
 import {React,useState} from "react";
 import {Route,Link} from "wouter";
+import { useLocation } from "wouter";
 import axios from "axios";
 export default function MerchantLogin()
 {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [location, setLocation] = useLocation();
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
@@ -18,7 +20,10 @@ export default function MerchantLogin()
       "password":password
   }
   let result = await axios.post("http://localhost:8000/doLogin", data);
-  console.log(result);
+  if(result.data=="success")
+  {
+    setLocation('/MerchantHome');
+  }
   }
 return (
 

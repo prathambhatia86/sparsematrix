@@ -50,6 +50,7 @@ const getMerchants = async (req, res) => {
 //Return all pincodes serviced by a merchant
 const getPincodes = async (req, res) => {
     const merchant = req.body.merchantName;
+    console.log(merchant);
     const cursor = req.body.cursor;
     let check = redis.exists(merchant);
     if (check == false) {
