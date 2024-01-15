@@ -51,7 +51,7 @@ export default function AddPincode() {
                         <h2 class="text-center mb-4">Edit pincode</h2>
 
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="taskInput" placeholder="Add a new task" value={pinCode}
+                            <input type="text" class="form-control" id="taskInput" placeholder="Add a new pincode" value={pinCode}
                                 onChange={changePincode} />
                             <div class="input-group-append">
                                 <button class="btn btn-primary" id="addTaskBtn" onClick={addTempPincode}>Add</button>

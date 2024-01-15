@@ -51,13 +51,13 @@ const doLogin=async(req,res)=>{
     //         res.send("incorrect");
     //     }
     //   });
-    const userData=await redis.smembers(username);
-        if (!userData) {
+    const userPass=await redis.hget(username,"password");
+        if (!userPass) {
           return res.status(404).json({ error: 'User not found' });
         }
-        const userObject = await JSON.parse(userData);
+        const userObject = await JSON.parse(userPass);
         console.log(userObject)
-        if(userObject.password==password)
+        if(userObject==password)
         {
             res.send("success");
         }
