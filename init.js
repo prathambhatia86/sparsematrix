@@ -45,6 +45,7 @@ class Init {
             if (names.has(name)) continue;
             names.add(name);
             let tempArr = _.sample(this.pincodes, _.random(1, 10))
+            tempArr=JSON.stringify(tempArr)
             await redis.hset(name, 'pins', tempArr)
             await redis.hset(name, 'password', randomstring.generate({
                 length: 10,

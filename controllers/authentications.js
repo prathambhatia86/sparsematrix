@@ -13,21 +13,15 @@ const name =req.body.name
 const username=req.body.username
 const password=req.body.password
 const city=req.body.city
-let data={
-    "name":name,
-    "password":password,
-    "city":city,
-    "pins":[]
-}
-data=JSON.stringify(data);
-console.log(data);
+let pins=new Array()
+pins=JSON.stringify(pins)
 try {
     // Assuming you have a Redis client (redis) already set up
     // and connected in your code
-    let result = await redis.sadd(username, data);
-    
-    // Check the result, it may be useful for error handling depending on your use case
-    console.log("Redis Sadd Result:", result);
+    await redis.hset(username, 'name', name)
+    await redis.hset(username, 'pins', pins)
+    await redis.hset(username, 'city', city)
+    await redis.hset(username, 'password', password)
   
     res.send(200);
   } catch (error) {
