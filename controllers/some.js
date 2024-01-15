@@ -1,4 +1,5 @@
 const Redis = require("ioredis");
+const { forEach } = require("underscore");
 var redis = new Redis(
     {
         password: 'rXB1Jrg9p21qLCeRRsdxnfMY0nBcxSu7',
@@ -70,29 +71,37 @@ const getPincodes = async (req, res) => {
             res.status(500)
         })
 }
-const updateMerchant = async (req, res) => {
-    const name = req.body.name
-    const username = req.body.username
-    const password = req.body.password
-    const city = req.body.city
-    const pins = req.body.pins
-    let data = {
-        "name": name,
-        "password": password,
-        "city": city,
-        "pins": pins
+const getAllPincodes=async(req,res)=>{
+    const merchant = req.body.merchantName;
+    let check = redis.exists(merchant);
+    if (check == false) {
+        //Bad Request
+        res.status('400');
+        return
     }
-    data = JSON.stringify(data);
-    console.log(data);
+    const result=await redis.hget(merchant,"pins");
+    res.status(200).json(result);
+}
+const updateMerchant = async (req, res) => {
+    console.log(req.body);
+    const username = req.body.username
+    let pins = req.body.pins
+    let addedPins=req.body.addedPins
+    let delPins=req.body.delPins
+    pins=JSON.stringify(pins);
+    console.log(addedPins);
     try {
         // Assuming you have a Redis client (redis) already set up
         // and connected in your code
-        await redis.del(username);
-        let result = await redis.sadd(username, data);
-
-        // Check the result, it may be useful for error handling depending on your use case
-        console.log("Redis Sadd Result:", result);
-
+        await redis.hset(username, 'pins', pins)
+        for(const val of addedPins)
+        {
+            await redis.sadd(val,username)
+        }
+        for(const val of delPins)
+        {
+            await redis.srem(val,username);
+        }
         res.send(200);
     } catch (error) {
         console.error("Error in Redis operation:", error);
@@ -101,5 +110,5 @@ const updateMerchant = async (req, res) => {
     }
 }
 module.exports = {
-    doesServe, getMerchants, getPincodes, updateMerchant
+    doesServe, getMerchants, getPincodes, updateMerchant,getAllPincodes
 }

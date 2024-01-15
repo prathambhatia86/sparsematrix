@@ -1,10 +1,11 @@
-import { useState, useEffect, React } from "react"
+import { useState, useEffect,useRef ,React } from "react"
 import axios from "axios";
 import Pincode from "./Pincode";
 export default function AddPincode() {
     let [currentPincodes, alterCurrentPincodes] = useState([]);
     let [pinCode, changePinCode] = useState();
-    let [details, changeDetails] = useState({});
+    let addedPins=useRef(new Set());
+    let delPins=useRef(new Set());
     useEffect(() => {
 
         let getPincodes = async () => {
@@ -12,25 +13,29 @@ export default function AddPincode() {
                 "merchantName": "hehe@gmail.com"
             }
             let existingPincodes = await axios.post("http://localhost:8000/getPincodesForMerchant", data);
-            existingPincodes = await JSON.parse(existingPincodes.data.data);
-            alterCurrentPincodes(existingPincodes.pins);
-            changeDetails(existingPincodes);
+            existingPincodes = await JSON.parse(existingPincodes.data);
+            alterCurrentPincodes(existingPincodes);
+            
 
         }
         getPincodes();
     }, []);
     const addTempPincode = () => {
+        addedPins.current.add(pinCode);
+        delPins.current.delete(pinCode);
         alterCurrentPincodes((prev) => {
             let newPinArray = [...prev, pinCode];
             return newPinArray;
         })
     };
     const deleteTempPincode = (val) => {
-
+        addedPins.current.delete(pinCode);
+        delPins.current.add(pinCode);
         alterCurrentPincodes((prev) => {
             let newPinArray = prev.filter((item) => {
                 return item !== val.items;
             });
+
             return newPinArray;
         })
     };
@@ -38,9 +43,15 @@ export default function AddPincode() {
         changePinCode(e.target.value);
     }
     const savePincodes = async () => {
-        let data = details
-        data.pins = currentPincodes
-        data.username = "hehe@gmail.com"
+        const addedPinsArray=Array.from(addedPins.current);
+        const delPinsArray=Array.from(delPins.current);
+        let data = {
+            "pins":currentPincodes,
+            "username":"hehe@gmail.com",
+            "addedPins":addedPinsArray,
+            "delPins":delPinsArray
+        }
+
         await axios.post("http://localhost:8000/updateMerchantDetails", data);
     }
     return (
