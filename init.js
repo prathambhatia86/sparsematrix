@@ -1,13 +1,13 @@
 const randomstring = require('randomstring');
 const Redis = require("ioredis");
-const _=require("underscore");
+const _ = require("underscore");
 var redis = new Redis(
     {
         password: 'rXB1Jrg9p21qLCeRRsdxnfMY0nBcxSu7',
-       
-            host: 'redis-12222.c274.us-east-1-3.ec2.cloud.redislabs.com',
-            port: 12222
-        
+
+        host: 'redis-12222.c274.us-east-1-3.ec2.cloud.redislabs.com',
+        port: 12222
+
     }
 );
 // redis.flushall((err, result) => {
@@ -18,7 +18,7 @@ var redis = new Redis(
 //     }
 // }
 // )
-  
+
 //Replace app.listen(.....) with these lines if datastore has not been initialised
 class Init {
     pincodes = new Set();
@@ -45,7 +45,19 @@ class Init {
             if (names.has(name)) continue;
             names.add(name);
             let tempArr = _.sample(this.pincodes, _.random(1, 10))
-            await redis.sadd(name, tempArr)
+            await redis.hset(name, 'data', tempArr)
+            await redis.hset(name, 'password', randomstring.generate({
+                length: 10,
+                charset: 'alphabetic'
+            }))//Password
+            await redis.hset(name, 'city', randomstring.generate({
+                length: 10,
+                charset: 'alphabetic'
+            }))//City
+            await redis.hset(name, 'Full name', randomstring.generate({
+                length: 10,
+                charset: 'alphabetic'
+            }))//Name
             for (let pincode of tempArr) {
                 await redis.sadd(pincode, name)
             }

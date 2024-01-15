@@ -1,9 +1,8 @@
-import {React,useState} from "react";
-import {Route,Link} from "wouter";
+import { React, useState } from "react";
+import { Route, Link } from "wouter";
 import { useLocation } from "wouter";
 import axios from "axios";
-export default function MerchantLogin()
-{
+export default function MerchantLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [location, setLocation] = useLocation();
@@ -14,18 +13,17 @@ export default function MerchantLogin()
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-  const doLogin=async()=>{
-    const data={
-      "username":username,
-      "password":password
+  const doLogin = async () => {
+    const data = {
+      "username": username,
+      "password": password
+    }
+    let result = await axios.post("http://localhost:8000/doLogin", data);
+    if (result.data == "success") {
+      setLocation('/MerchantHome');
+    }
   }
-  let result = await axios.post("http://localhost:8000/doLogin", data);
-  if(result.data=="success")
-  {
-    setLocation('/MerchantHome');
-  }
-  }
-return (
+  return (
 
     <div className="container mt-5">
       <div className="card mx-auto" style={{ maxWidth: '400px' }}>
@@ -64,9 +62,9 @@ return (
           <p className="text-center">
             Don't have an account?{' '}
             <Link href="/MerchantSignup">
-            <button className="btn btn-warning">
-              Create Merchant Account
-            </button>
+              <button className="btn btn-warning">
+                Create Merchant Account
+              </button>
             </Link>
           </p>
         </div>
