@@ -71,7 +71,7 @@ const getPincodes = async (req, res) => {
             res.status(500)
         })
 }
-const getAllPincodes=async(req,res)=>{
+const getAllPincodes = async (req, res) => {
     const merchant = req.body.merchantName;
     let check = redis.exists(merchant);
     if (check == false) {
@@ -79,28 +79,26 @@ const getAllPincodes=async(req,res)=>{
         res.status('400');
         return
     }
-    const result=await redis.hget(merchant,"pins");
+    const result = await redis.hget(merchant, "pins");
     res.status(200).json(result);
 }
+
+//Update the merchant
 const updateMerchant = async (req, res) => {
     console.log(req.body);
     const username = req.body.username
     let pins = req.body.pins
-    let addedPins=req.body.addedPins
-    let delPins=req.body.delPins
-    pins=JSON.stringify(pins);
+    let addedPins = req.body.addedPins
+    let delPins = req.body.delPins
+    pins = JSON.stringify(pins);
     console.log(addedPins);
     try {
-        // Assuming you have a Redis client (redis) already set up
-        // and connected in your code
         await redis.hset(username, 'pins', pins)
-        for(const val of addedPins)
-        {
-            await redis.sadd(val,username)
+        for (const val of addedPins) {
+            redis.sadd(val, username); //Removed await, we aren't reporting any errors so let it happen in background
         }
-        for(const val of delPins)
-        {
-            await redis.srem(val,username);
+        for (const val of delPins) {
+            redis.srem(val, username); //Removed await
         }
         res.send(200);
     } catch (error) {
@@ -110,5 +108,5 @@ const updateMerchant = async (req, res) => {
     }
 }
 module.exports = {
-    doesServe, getMerchants, getPincodes, updateMerchant,getAllPincodes
+    doesServe, getMerchants, getPincodes, updateMerchant, getAllPincodes
 }

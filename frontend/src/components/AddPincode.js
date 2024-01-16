@@ -1,13 +1,18 @@
-import { useState, useEffect,useRef ,React } from "react"
+import { useState, useEffect, useRef, React } from "react"
 import axios from "axios";
-import Pincode from "./Pincode";
+import Pagination from "./Pagination";
+import PincodeItem from "./PincodeItem";
+import { MdSave } from "react-icons/md";
+import { IoAddCircleOutline } from "react-icons/io5";
 export default function AddPincode() {
+    //Variables for pagination
+    const [allowNext, changeAllowNext] = useState(false);
+
     let [currentPincodes, alterCurrentPincodes] = useState([]);
     let [pinCode, changePinCode] = useState();
-    let addedPins=useRef(new Set());
-    let delPins=useRef(new Set());
+    let addedPins = useRef(new Set());
+    let delPins = useRef(new Set());
     useEffect(() => {
-
         let getPincodes = async () => {
             let data = {
                 "merchantName": "hehe@gmail.com"
@@ -15,12 +20,12 @@ export default function AddPincode() {
             let existingPincodes = await axios.post("http://localhost:8000/getPincodesForMerchant", data);
             existingPincodes = await JSON.parse(existingPincodes.data);
             alterCurrentPincodes(existingPincodes);
-            
 
         }
         getPincodes();
     }, []);
     const addTempPincode = () => {
+        if (addedPins.current.has(pinCode)) return;
         addedPins.current.add(pinCode);
         delPins.current.delete(pinCode);
         alterCurrentPincodes((prev) => {
@@ -33,27 +38,52 @@ export default function AddPincode() {
         delPins.current.add(pinCode);
         alterCurrentPincodes((prev) => {
             let newPinArray = prev.filter((item) => {
-                return item !== val.items;
+                console.log(item)
+                return item !== val;
             });
-
+            if (newPinArray.length <= 3 * (paginationWasteState - 1)) changeWasteState(prev => prev - 1);
             return newPinArray;
         })
     };
+    console.log(currentPincodes)
     const changePincode = (e) => {
         changePinCode(e.target.value);
     }
     const savePincodes = async () => {
-        const addedPinsArray=Array.from(addedPins.current);
-        const delPinsArray=Array.from(delPins.current);
+        const addedPinsArray = Array.from(addedPins.current);
+        const delPinsArray = Array.from(delPins.current);
         let data = {
-            "pins":currentPincodes,
-            "username":"hehe@gmail.com",
-            "addedPins":addedPinsArray,
-            "delPins":delPinsArray
+            "pins": currentPincodes,
+            "username": "hehe@gmail.com",
+            "addedPins": addedPinsArray,
+            "delPins": delPinsArray
         }
 
         await axios.post("http://localhost:8000/updateMerchantDetails", data);
+        if (currentPincodes.length > 3 * paginationWasteState) changeAllowNext(true);
+        else changeAllowNext(false);
+
     }
+
+    //Pagination Logic
+    const [paginationWasteState, changeWasteState] = useState(1);
+    useEffect(() => {
+        if (currentPincodes.length > 3 * paginationWasteState) changeAllowNext(true);
+        else changeAllowNext(false);
+    }, [currentPincodes, paginationWasteState])
+    const onNext = async () => {
+        changeWasteState((prev) => prev + 1);
+        if (currentPincodes.length > 3 * paginationWasteState) changeAllowNext(true);
+        else changeAllowNext(false);
+    }
+
+    const onPrevious = async () => {
+        changeWasteState((prev) => prev - 1);
+        if (currentPincodes.length > 3 * paginationWasteState) changeAllowNext(true);
+        else changeAllowNext(false);
+    }
+
+
     return (
         <>
             <div class="container mt-5">
@@ -65,24 +95,19 @@ export default function AddPincode() {
                             <input type="text" class="form-control" id="taskInput" placeholder="Add a new pincode" value={pinCode}
                                 onChange={changePincode} />
                             <div class="input-group-append">
-                                <button class="btn btn-primary" id="addTaskBtn" onClick={addTempPincode}>Add</button>
+                                <button class="btn btn-primary" id="addTaskBtn" onClick={addTempPincode}>Add <IoAddCircleOutline /></button>
                             </div>
                         </div>
-
-                        <ul class="list-group" id="taskList">
+                        <ul class="list-group">
                             {
-                                currentPincodes.map((items) =>
-                                (
-                                    <li class="list-group-item">
-                                        {items}
-                                        <button class="btn btn-danger btn-sm float-right" onClick={() => deleteTempPincode({ items })}>Delete</button>
-                                    </li>
-                                )
-                                )
+                                currentPincodes.slice((paginationWasteState - 1) * 3, paginationWasteState * 3).map((element) => {
+                                    return <PincodeItem key={element} element={element} deleteTempPincode={deleteTempPincode} />
+                                })
                             }
                         </ul>
+                        <Pagination onNext={onNext} canGoAhead={allowNext} currentPage={paginationWasteState} onPrevious={onPrevious} />
 
-                        <button class="btn btn-success mt-3 float-right" onClick={savePincodes} >Save</button>
+                        <button class="btn btn-success mt-3 float-right " onClick={savePincodes} >Save <MdSave /></button>
                     </div>
                 </div>
             </div>

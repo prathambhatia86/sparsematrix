@@ -2,8 +2,8 @@ import React from 'react';
 
 const Pagination = ({ onNext, onPrevious, currentPage, canGoAhead }) => {
     return (
-        <nav aria-label="Page navigation">
-            <ul className="pagination">
+        <div style={{ width: '100%' }}>
+            <ul className="pagination text-center d-flex justify-content-center align-content-center mt-3 mb-0" style={{ width: '100%' }}>
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                     <button className="page-link" onClick={onPrevious} disabled={currentPage === 1}>
                         Previous
@@ -18,7 +18,7 @@ const Pagination = ({ onNext, onPrevious, currentPage, canGoAhead }) => {
                     </button>
                 </li>
             </ul>
-        </nav>
+        </div >
     );
 };
 
