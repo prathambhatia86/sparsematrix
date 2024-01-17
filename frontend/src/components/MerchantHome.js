@@ -1,27 +1,34 @@
-import {React,useState} from "react"
+import { React, useState } from "react"
 import AddPincode from "./AddPincode"
+import { CgProfile } from "react-icons/cg";
+import { TbHomeEdit } from "react-icons/tb";
 
-export default function MerchantHome()
-{
-    const [isClikedEditPincode,toggleEditPincodes]=useState(false);
-    const editPincodes =()=>{
-        toggleEditPincodes(prev=>!(prev));
+export default function MerchantHome() {
+    const [isClickedEditPincode, toggleEditPincodes] = useState(false);
+    const [isClickedProfile, toggleCheckProfile] = useState(false);
+    const editPincodes = () => {
+        toggleEditPincodes(prev => !(prev));
+        toggleCheckProfile(false);
     }
-    return(
+    const editCheckProfile = () => {
+        toggleCheckProfile(prev => !(prev));
+        toggleEditPincodes(false);
+    }
+    return (
         <div class="container mt-5">
-    <h2 class="text-center mb-4">User Profile</h2>
+            <h2 class="text-center mb-4">Welcome [TODO Add UserName]</h2>
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-body text-center">
-                    <button class="btn btn-primary mr-2">Check Profile</button>
-                    <button class="btn btn-warning" onClick={editPincodes}>Edit Pincodes</button>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-body text-center">
+                            <button class={isClickedProfile ? "btn btn-primary mr-2" : "btn btn-secondary mr-2 btn-outline-primary"} style={{ color: 'white' }} onClick={editCheckProfile}>Check Profile <CgProfile style={{ marginTop: '-3px', marginLeft: '-3px' }} /></button>
+                            <button class={isClickedEditPincode ? "btn btn-warning ml-2" : "btn btn-secondary ml-2 btn-outline-warning"} style={{ color: 'white' }} onClick={editPincodes}>Edit Pincodes <TbHomeEdit style={{ marginTop: '-3px', marginLeft: '-3px' }} /></button>
+                        </div>
+                    </div>
                 </div>
+                {isClickedEditPincode && <AddPincode />}
             </div>
         </div>
-        {isClikedEditPincode&&<AddPincode/>}
-    </div>
-</div>
     )
 }

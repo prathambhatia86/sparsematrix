@@ -1,11 +1,15 @@
 import { Route, Link } from "wouter";
 import { React, useState } from "react";
 import axios from "axios";
+import { GiConfirmed } from "react-icons/gi";
+
 export default function MerchantSignup() {
 	const [name, setName] = useState('');
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [city, setCity] = useState('');
+	const [isVerified, setVerified] = useState(false);
+
 	const handleNameChange = (e) => {
 		setName(e.target.value);
 	};
@@ -36,7 +40,7 @@ export default function MerchantSignup() {
 		<div className="container mt-5">
 			<div className="card mx-auto" style={{ maxWidth: '400px' }}>
 				<div className="card-header bg-success text-white">Sign Up</div>
-				<div className="card-body">
+				<div className="card-body bg-light">
 					<form >
 						<div className="form-group">
 							<label htmlFor="name">Name</label>
@@ -52,15 +56,18 @@ export default function MerchantSignup() {
 						</div>
 						<div className="form-group">
 							<label htmlFor="username">Username</label>
-							<input
-								type="text"
-								className="form-control"
-								id="username"
-								placeholder="Enter a unique username"
-								value={username}
-								onChange={handleUsernameChange}
-								required
-							/>
+							<div className=" input-group">
+								<input
+									type="text"
+									className="form-control"
+									id="username"
+									placeholder="Enter a unique username"
+									value={username}
+									onChange={handleUsernameChange}
+									required
+								/>
+								<button type="button" style={{ opacity: '70%' }} className={!isVerified ? "btn btn-secondary rounded-0 " : "btn btn-success rounded-0"} disabled={isVerified} onClick={() => setVerified(true)}>{!isVerified && 'Verify'} {isVerified && 'Verified '}{isVerified && < GiConfirmed style={{ marginLeft: '-3px', marginTop: '-3px' }} />}</button>
+							</div>
 						</div>
 						<div className="form-group">
 							<label htmlFor="password">Password</label>
@@ -86,7 +93,7 @@ export default function MerchantSignup() {
 								required
 							/>
 						</div>
-						<button type="button" onClick={addSignup} className="btn btn-success btn-block btn-outline-light" >
+						<button type="button" onClick={addSignup} disabled={!isVerified} className="btn btn-success btn-block" style={{ color: 'white' }}>
 							Sign Up
 						</button>
 					</form>

@@ -50,8 +50,11 @@ export default function AddPincode() {
         changePinCode(e.target.value);
     }
     const savePincodes = async () => {
+        const ok = window.confirm('Are you sure you want to save these changes?');
+        if (!ok) return;
         const addedPinsArray = Array.from(addedPins.current);
         const delPinsArray = Array.from(delPins.current);
+        if (delPinsArray.length === 0 && addedPinsArray.length === 0) return;
         let data = {
             "pins": currentPincodes,
             "username": "hehe@gmail.com",
@@ -86,16 +89,16 @@ export default function AddPincode() {
 
     return (
         <>
-            <div class="container mt-5">
-                <div class="card shadow">
+            <div class="container mt-5 ">
+                <div class="card shadow bg-light">
                     <div class="card-body">
-                        <h2 class="text-center mb-4">Edit pincode</h2>
+                        <h2 class="text-center mb-4">Manage Pincodes</h2>
 
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" id="taskInput" placeholder="Add a new pincode" value={pinCode}
                                 onChange={changePincode} />
                             <div class="input-group-append">
-                                <button class="btn btn-primary" id="addTaskBtn" onClick={addTempPincode}>Add <IoAddCircleOutline /></button>
+                                <button class="btn btn-primary btn-outline-secondary" style={{ color: 'white' }} id="addTaskBtn" onClick={addTempPincode} title="Click to add this pincode">Add <IoAddCircleOutline style={{ marginTop: '-3px', marginLeft: '-3px' }} /></button>
                             </div>
                         </div>
                         <ul class="list-group">
@@ -107,7 +110,7 @@ export default function AddPincode() {
                         </ul>
                         <Pagination onNext={onNext} canGoAhead={allowNext} currentPage={paginationWasteState} onPrevious={onPrevious} />
 
-                        <button class="btn btn-success mt-3 float-right " onClick={savePincodes} >Save <MdSave /></button>
+                        <button class="btn btn-success mt-3 float-right " onClick={savePincodes} title="Click to save the changes, unsaved changes are lost on refresh">Save <MdSave style={{ marginTop: '-3px', marginLeft: '-3px' }} /></button>
                     </div>
                 </div>
             </div>

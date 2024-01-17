@@ -21,7 +21,7 @@ const MerchantNameForm = () => {
                             </button>
                             <button
                                 type="button"
-                                className={`btn ${login >= 1 ? 'btn-primary' : 'btn-secondary'}`}
+                                className={`btn ${login >= 1 ? 'btn-success' : 'btn-secondary'}`}
                                 onClick={() => { changeLogin(1); }}
                                 style={{ width: '40%', opacity: '85%' }}
                             >
@@ -29,7 +29,7 @@ const MerchantNameForm = () => {
                             </button>
                         </div>
                         {!login && <MerchantLogin />}
-                        {login > 0 && <MerchantSignup />}
+                        {login > 0 && <MerchantSignup changeLogin={() => { changeLogin(0) }} />}
                     </div>
                 </div>
             </div>

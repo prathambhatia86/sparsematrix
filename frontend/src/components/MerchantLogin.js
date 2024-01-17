@@ -1,7 +1,9 @@
 import { React, useState } from "react";
-import { Route, Link } from "wouter";
+import { Link } from "wouter";
 import { useLocation } from "wouter";
+import { FaQuestion } from "react-icons/fa6";
 import axios from "axios";
+
 export default function MerchantLogin() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -28,7 +30,7 @@ export default function MerchantLogin() {
 		<div className="container mt-5">
 			<div className="card mx-auto" style={{ maxWidth: '400px' }}>
 				<div className="card-header bg-primary text-white">Login</div>
-				<div className="card-body">
+				<div className="card-body bg-light">
 					<form>
 						<div className="form-group">
 							<label htmlFor="username">Username</label>
@@ -61,8 +63,8 @@ export default function MerchantLogin() {
 					<hr />
 					<p className="text-center">
 						<Link href="/ForgotPassword">
-							<button className="btn btn-warning btn-outline-info" style={{ color: 'white' }}>
-								Forgot Password
+							<button className="btn btn-warning btn-outline-info border-0" style={{ color: 'white', opacity: '75%' }}>
+								Forgot Password <FaQuestion style={{ marginTop: '-3px', marginLeft: '-3px' }} />
 							</button>
 						</Link>
 					</p>

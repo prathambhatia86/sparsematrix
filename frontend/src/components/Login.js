@@ -37,7 +37,7 @@ export default function Login() {
                 <div className="col-md-6 offset-md-3 text-light text-center">
                     <h1 className="mb-4">Welcome to Our Platform</h1>
                     <p className="lead mb-4">Login as a Merchant / Buyer</p>
-                    <Link href='/BuyerLogin'>
+                    <Link href='/BuyerHome'>
                         <button type="button" className="btn btn-primary" style={{ backgroundColor: 'rgba(10, 0, 200, 0.75)', ...buttonStyle }} >
                             Enter as Buyer
                         </button>
