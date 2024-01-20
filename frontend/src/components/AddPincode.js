@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, React } from "react"
 import axios from "axios";
 import Pagination from "./Pagination";
-import PincodeItem from "./PincodeItem";
+import PincodeItem from "./DataItem";
 import { MdSave } from "react-icons/md";
 import { IoAddCircleOutline } from "react-icons/io5";
 export default function AddPincode() {
