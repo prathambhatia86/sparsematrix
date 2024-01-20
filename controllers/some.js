@@ -12,9 +12,8 @@ var redis = new Redis(
 
 // Return true if merchant serves this pincode
 const checkEntries = async (merchantName, Pincode) => {
-    //Better to check merchant set, smaller is size probably?
     try {
-        return await redis.sismember(merchantName, Pincode);
+        return await redis.sismember(Pincode, merchantName);
     } catch (error) {
         console.log(`Couldn't check if merchant serves location, error: ${error}`)
     }
@@ -27,50 +26,20 @@ const doesServe = async (req, res) => {
 
 //Return all merchants servicing a pincode
 const getMerchants = async (req, res) => {
-    const pinCode = req.body.pincode;
-    const cursor = req.body.cursor;
+    const pinCode = req.body.pinCode;
     let check = redis.exists(pinCode);
     if (check == false) {
         //Bad Request
-        res.status('400');
+        res.status(400);
         return
     }
-    redis.sscan(pinCode, cursor, "COUNT", 20).
-        then((result) => {
-            result = {
-                cursor: result[0],
-                data: result[1],
-            }
-            res.status(200).json(result);
-        }).catch((error) => {
-            console.log(error)
-            res.status(500)
-        })
+    redis.smembers(pinCode).then((result) => {
+        console.log(result);
+        res.status(200).json({ merchants: result.filter((pincode) => { return pincode != 0; }) });
+    })
 }
 
 //Return all pincodes serviced by a merchant
-const getPincodes = async (req, res) => {
-    const merchant = req.body.merchantName;
-    console.log(merchant);
-    const cursor = req.body.cursor;
-    let check = redis.exists(merchant);
-    if (check == false) {
-        //Bad Request
-        res.status('400');
-        return
-    }
-    redis.sscan(merchant, cursor, "COUNT", 20).
-        then((result) => {
-            result = {
-                cursor: result[0],
-                data: result[1],
-            }
-            res.status(200).json(result);
-        }).catch((error) => {
-            console.log(error)
-            res.status(500)
-        })
-}
 const getAllPincodes = async (req, res) => {
     const merchant = req.body.merchantName;
     let check = redis.exists(merchant);
@@ -100,7 +69,7 @@ const updateMerchant = async (req, res) => {
         for (const val of delPins) {
             redis.srem(val, username); //Removed await
         }
-        res.send(200);
+        res.status(200);
     } catch (error) {
         console.error("Error in Redis operation:", error);
         // Handle the error appropriately, e.g., send an error response
@@ -108,5 +77,5 @@ const updateMerchant = async (req, res) => {
     }
 }
 module.exports = {
-    doesServe, getMerchants, getPincodes, updateMerchant, getAllPincodes
+    doesServe, getMerchants, updateMerchant, getAllPincodes
 }
