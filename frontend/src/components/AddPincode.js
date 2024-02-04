@@ -9,8 +9,8 @@ export default function AddPincode() {
     const headers = {
         'Authorization': sessionStorage.token,
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin':'*',
-      };
+        'Access-Control-Allow-Origin': '*',
+    };
     const [allowNext, changeAllowNext] = useState(false);
 
     let [currentPincodes, alterCurrentPincodes] = useState([]);
@@ -19,9 +19,9 @@ export default function AddPincode() {
     let delPins = useRef(new Set());
     useEffect(() => {
         let getPincodes = async () => {
-           
+
             console.log(headers)
-            let existingPincodes = await axios.post("http://localhost:8000/getPincodesForMerchant",{},{headers});
+            let existingPincodes = await axios.post("http://localhost:8000/getPincodesForMerchant", {}, { headers });
             existingPincodes = await JSON.parse(existingPincodes.data);
             alterCurrentPincodes(existingPincodes);
 
@@ -45,7 +45,7 @@ export default function AddPincode() {
                 console.log(item)
                 return item !== val;
             });
-            if (newPinArray.length <= 3 * (paginationWasteState - 1)) changeWasteState(prev => prev - 1);
+            if (newPinArray.length <= 10 * (paginationWasteState - 1)) changeWasteState(prev => prev - 1);
             return newPinArray;
         })
     };
@@ -56,17 +56,17 @@ export default function AddPincode() {
     const savePincodes = async () => {
         const ok = window.confirm('Are you sure you want to save these changes?');
         if (!ok) return;
-        const addedPinsArray = (Array.from(addedPins.current)).map((val)=>{return parseInt(val)});
-        const delPinsArray = Array.from(delPins.current).map((val)=>{return parseInt(val)});
+        const addedPinsArray = (Array.from(addedPins.current)).map((val) => { return parseInt(val) });
+        const delPinsArray = Array.from(delPins.current).map((val) => { return parseInt(val) });
         console.log(addedPinsArray);
         if (delPinsArray.length === 0 && addedPinsArray.length === 0) return;
         let data = {
-            "pins": currentPincodes.map((val)=>{return parseInt(val)}),
+            "pins": currentPincodes.map((val) => { return parseInt(val) }),
             "addedPins": addedPinsArray,
             "delPins": delPinsArray
         }
-        await axios.post("http://localhost:8000/updateMerchantDetails", data,{headers});
-        if (currentPincodes.length > 3 * paginationWasteState) changeAllowNext(true);
+        await axios.post("http://localhost:8000/updateMerchantDetails", data, { headers });
+        if (currentPincodes.length > 10 * paginationWasteState) changeAllowNext(true);
         else changeAllowNext(false);
 
     }
@@ -74,18 +74,18 @@ export default function AddPincode() {
     //Pagination Logic
     const [paginationWasteState, changeWasteState] = useState(1);
     useEffect(() => {
-        if (currentPincodes.length > 3 * paginationWasteState) changeAllowNext(true);
+        if (currentPincodes.length > 10 * paginationWasteState) changeAllowNext(true);
         else changeAllowNext(false);
     }, [currentPincodes, paginationWasteState])
     const onNext = async () => {
         changeWasteState((prev) => prev + 1);
-        if (currentPincodes.length > 3 * paginationWasteState) changeAllowNext(true);
+        if (currentPincodes.length > 10 * paginationWasteState) changeAllowNext(true);
         else changeAllowNext(false);
     }
 
     const onPrevious = async () => {
         changeWasteState((prev) => prev - 1);
-        if (currentPincodes.length > 3 * paginationWasteState) changeAllowNext(true);
+        if (currentPincodes.length > 10 * paginationWasteState) changeAllowNext(true);
         else changeAllowNext(false);
     }
 
@@ -106,7 +106,7 @@ export default function AddPincode() {
                         </div>
                         <ul class="list-group">
                             {
-                                currentPincodes.slice((paginationWasteState - 1) * 3, paginationWasteState * 3).map((element) => {
+                                currentPincodes.slice((paginationWasteState - 1) * 10, paginationWasteState * 10).map((element) => {
                                     return <PincodeItem key={element} element={element} deleteTempPincode={deleteTempPincode} />
                                 })
                             }

@@ -1,6 +1,6 @@
 const Redis = require("ioredis");
-const jwt=require("jsonwebtoken")
-const secretKey="buildforbharat"
+const jwt = require("jsonwebtoken")
+const secretKey = "buildforbharat"
 var redis = new Redis(
     {
         password: 'rXB1Jrg9p21qLCeRRsdxnfMY0nBcxSu7',
@@ -18,17 +18,13 @@ const addMerchant = async (req, res) => {
     let pins = new Array()
     pins = JSON.stringify(pins)
     try {
-        // Assuming you have a Redis client (redis) already set up
-        // and connected in your code
         await redis.hset(username, 'name', name)
         await redis.hset(username, 'pins', pins)
         await redis.hset(username, 'city', city)
         await redis.hset(username, 'password', password)
-
-        res.sendStatus(200);
+        res.status(200).json({ success: true });
     } catch (error) {
         console.error("Error in Redis operation:", error);
-        // Handle the error appropriately, e.g., send an error response
         res.status(500).send("Internal Server Error");
     }
 }
@@ -60,13 +56,13 @@ const doLogin = async (req, res) => {
     const userObject = userPass;
     console.log(userObject)
     if (userObject == password) {
-        const payload={
-            username:username
+        const payload = {
+            username: username
         }
-        const token=jwt.sign(payload,secretKey);
+        const token = jwt.sign(payload, secretKey);
         res.json({
-            token:token,
-            track:"correct"
+            token: token,
+            track: "correct"
         });
     }
     else {

@@ -1,9 +1,8 @@
-import { Route, Link } from "wouter";
 import { React, useState } from "react";
 import axios from "axios";
 import { GiConfirmed } from "react-icons/gi";
 
-export default function MerchantSignup() {
+export default function MerchantSignup({ changeLogin }) {
 	const [name, setName] = useState('');
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -26,6 +25,10 @@ export default function MerchantSignup() {
 		setCity(e.target.value);
 	};
 	const addSignup = async () => {
+		if (name.length == 0 || username.length == 0 || city.length == 0 || password.length == 0) {
+			alert('Some field(s) are still empty!');
+			return;
+		}
 		const data = {
 			"name": name,
 			"username": username,
@@ -33,7 +36,20 @@ export default function MerchantSignup() {
 			"city": city
 		}
 		let result = await axios.post("http://localhost:8000/addMerchant", data);
-		console.log(result);
+		if (result.data.success) {
+			changeLogin()
+		}
+	}
+
+	const handleVerification = async () => {
+		const data = {
+			"username": username
+		}
+		let result = await axios.post("http://localhost:8000/verifyUnique", data);
+		console.log(result.data);
+		if (result.data.unique) {
+			setVerified(true);
+		}
 	}
 	return (
 
@@ -66,7 +82,7 @@ export default function MerchantSignup() {
 									onChange={handleUsernameChange}
 									required
 								/>
-								<button type="button" style={{ opacity: '70%' }} className={!isVerified ? "btn btn-secondary rounded-0 " : "btn btn-success rounded-0"} disabled={isVerified} onClick={() => setVerified(true)}>{!isVerified && 'Verify'} {isVerified && 'Verified '}{isVerified && < GiConfirmed style={{ marginLeft: '-3px', marginTop: '-3px' }} />}</button>
+								<button type="button" style={{ opacity: '70%' }} className={!isVerified ? "btn btn-secondary rounded-0 " : "btn btn-success rounded-0"} disabled={isVerified} onClick={handleVerification}>{!isVerified && 'Verify'} {isVerified && 'Verified '}{isVerified && < GiConfirmed style={{ marginLeft: '-3px', marginTop: '-3px' }} />}</button>
 							</div>
 						</div>
 						<div className="form-group">

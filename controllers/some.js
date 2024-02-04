@@ -1,5 +1,4 @@
 const Redis = require("ioredis");
-const { forEach } = require("underscore");
 var redis = new Redis(
     {
         password: 'rXB1Jrg9p21qLCeRRsdxnfMY0nBcxSu7',
@@ -77,6 +76,16 @@ const updateMerchant = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 }
+
+const verifyUnique = async (req, res) => {
+    try {
+        const exists = await redis.exists(req.body.username);
+        res.status(200).json({ unique: !exists });
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({ error: "Internal Server Error" });
+    }
+}
 module.exports = {
-    doesServe, getMerchants, updateMerchant, getAllPincodes
+    doesServe, getMerchants, updateMerchant, getAllPincodes, verifyUnique
 }
