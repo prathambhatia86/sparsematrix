@@ -1,4 +1,6 @@
 const Redis = require("ioredis");
+const jwt=require("jsonwebtoken")
+const secretKey="buildforbharat"
 var redis = new Redis(
     {
         password: 'rXB1Jrg9p21qLCeRRsdxnfMY0nBcxSu7',
@@ -55,10 +57,17 @@ const doLogin = async (req, res) => {
     if (!userPass) {
         return res.status(404).json({ error: 'User not found' });
     }
-    const userObject = await JSON.parse(userPass);
+    const userObject = userPass;
     console.log(userObject)
     if (userObject == password) {
-        res.send("success");
+        const payload={
+            username:username
+        }
+        const token=jwt.sign(payload,secretKey);
+        res.json({
+            token:token,
+            track:"correct"
+        });
     }
     else {
         res.send("incorrect");

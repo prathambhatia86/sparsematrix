@@ -41,7 +41,7 @@ const getMerchants = async (req, res) => {
 
 //Return all pincodes serviced by a merchant
 const getAllPincodes = async (req, res) => {
-    const merchant = req.body.merchantName;
+    const merchant = req.user.username;
     let check = redis.exists(merchant);
     if (check == false) {
         //Bad Request
@@ -55,11 +55,12 @@ const getAllPincodes = async (req, res) => {
 //Update the merchant
 const updateMerchant = async (req, res) => {
     console.log(req.body);
-    const username = req.body.username
+    const username = req.user.username
     let pins = req.body.pins
     let addedPins = req.body.addedPins
     let delPins = req.body.delPins
     pins = JSON.stringify(pins);
+    console.log(pins)
     console.log(addedPins);
     try {
         await redis.hset(username, 'pins', pins)

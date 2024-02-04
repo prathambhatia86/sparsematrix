@@ -21,7 +21,10 @@ export default function MerchantLogin() {
 			"password": password
 		}
 		let result = await axios.post("http://localhost:8000/doLogin", data);
-		if (result.data == "success") {
+		console.log(result);
+		if (result.data.track == "correct") {
+			console.log(result.data.token);
+			sessionStorage.setItem("token", result.data.token);
 			setLocation('/MerchantHome');
 		}
 	}

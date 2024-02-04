@@ -6,6 +6,11 @@ import { MdSave } from "react-icons/md";
 import { IoAddCircleOutline } from "react-icons/io5";
 export default function AddPincode() {
     //Variables for pagination
+    const headers = {
+        'Authorization': sessionStorage.token,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin':'*',
+      };
     const [allowNext, changeAllowNext] = useState(false);
 
     let [currentPincodes, alterCurrentPincodes] = useState([]);
@@ -14,10 +19,9 @@ export default function AddPincode() {
     let delPins = useRef(new Set());
     useEffect(() => {
         let getPincodes = async () => {
-            let data = {
-                "merchantName": "hehe@gmail.com"
-            }
-            let existingPincodes = await axios.post("http://localhost:8000/getPincodesForMerchant", data);
+           
+            console.log(headers)
+            let existingPincodes = await axios.post("http://localhost:8000/getPincodesForMerchant",{},{headers});
             existingPincodes = await JSON.parse(existingPincodes.data);
             alterCurrentPincodes(existingPincodes);
 
@@ -52,17 +56,16 @@ export default function AddPincode() {
     const savePincodes = async () => {
         const ok = window.confirm('Are you sure you want to save these changes?');
         if (!ok) return;
-        const addedPinsArray = Array.from(addedPins.current);
-        const delPinsArray = Array.from(delPins.current);
+        const addedPinsArray = (Array.from(addedPins.current)).map((val)=>{return parseInt(val)});
+        const delPinsArray = Array.from(delPins.current).map((val)=>{return parseInt(val)});
+        console.log(addedPinsArray);
         if (delPinsArray.length === 0 && addedPinsArray.length === 0) return;
         let data = {
-            "pins": currentPincodes,
-            "username": "hehe@gmail.com",
+            "pins": currentPincodes.map((val)=>{return parseInt(val)}),
             "addedPins": addedPinsArray,
             "delPins": delPinsArray
         }
-
-        await axios.post("http://localhost:8000/updateMerchantDetails", data);
+        await axios.post("http://localhost:8000/updateMerchantDetails", data,{headers});
         if (currentPincodes.length > 3 * paginationWasteState) changeAllowNext(true);
         else changeAllowNext(false);
 
