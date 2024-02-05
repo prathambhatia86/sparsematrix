@@ -26,18 +26,18 @@ export default function GetMerchants() {
 
     //Pagination logic
     useEffect(() => {
-        if (currentMerchants.length > 3 * paginationWasteState) changeAllowNext(true);
+        if (currentMerchants.length > 10 * paginationWasteState) changeAllowNext(true);
         else changeAllowNext(false);
     }, [currentMerchants, paginationWasteState])
     const onNext = async () => {
         changeWasteState((prev) => prev + 1);
-        if (currentMerchants.length > 3 * paginationWasteState) changeAllowNext(true);
+        if (currentMerchants.length > 10 * paginationWasteState) changeAllowNext(true);
         else changeAllowNext(false);
     }
 
     const onPrevious = async () => {
         changeWasteState((prev) => prev - 1);
-        if (currentMerchants.length > 3 * paginationWasteState) changeAllowNext(true);
+        if (currentMerchants.length > 10 * paginationWasteState) changeAllowNext(true);
         else changeAllowNext(false);
     }
 
@@ -70,7 +70,7 @@ export default function GetMerchants() {
                     {currentMerchants.length > 0 &&
                         <><ul class="list-group">
                             {
-                                currentMerchants.slice((paginationWasteState - 1) * 3, paginationWasteState * 3).map((element) => {
+                                currentMerchants.slice((paginationWasteState - 1) * 10, paginationWasteState * 10).map((element) => {
                                     return <MerchantItem key={element} element={element} />
                                 })
                             }
