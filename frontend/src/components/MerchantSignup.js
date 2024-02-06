@@ -3,6 +3,7 @@ import axios from "axios";
 import { GiConfirmed } from "react-icons/gi";
 
 export default function MerchantSignup({ changeLogin }) {
+	const api="";
 	const [name, setName] = useState('');
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -35,7 +36,7 @@ export default function MerchantSignup({ changeLogin }) {
 			"password": password,
 			"city": city
 		}
-		let result = await axios.post("http://localhost:8000/addMerchant", data);
+		let result = await axios.post(`${api}/addMerchant`, data);
 		if (result.data.success) {
 			changeLogin()
 		}
@@ -45,7 +46,7 @@ export default function MerchantSignup({ changeLogin }) {
 		const data = {
 			"username": username
 		}
-		let result = await axios.post("http://localhost:8000/verifyUnique", data);
+		let result = await axios.post(`${api}/verifyUnique`, data);
 		console.log(result.data);
 		if (result.data.unique) {
 			setVerified(true);

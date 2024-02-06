@@ -9,14 +9,14 @@ export default function GetMerchants() {
     const [currentMerchants, setcurrentMerchants] = useState([]);
     const [paginationWasteState, changeWasteState] = useState(1);
     const [allowNext, changeAllowNext] = useState(false);
-
+    const api="";
 
     const Get = async () => {
         if (pincode.length == 0) return;
         const data = {
             pinCode: pincode
         };
-        let result = await axios.post("http://localhost:8000/getMerchantsByPincode", data);
+        let result = await axios.post(`${api}/getMerchantsByPincode`, data);
         result = result.data;
         if (result.merchants.length == 0) {
             window.alert('No merchant found for this pincode!');

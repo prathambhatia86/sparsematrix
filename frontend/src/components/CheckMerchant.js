@@ -6,13 +6,14 @@ export default function CheckMerchant() {
     const [pincode, setPincode] = useState('');
     const [merchantName, setMerchantName] = useState('');
     const [isVerified, setVerified] = useState(0);
+    const api="";
     const Verify = async () => {
         if (merchantName.length == 0 || pincode.length == 0) return;
         const data = {
             merchantName: merchantName,
             pinCode: pincode
         };
-        let result = await axios.post("http://localhost:8000/checkEntries", data);
+        let result = await axios.post(`${api}/checkEntries`, data);
         result = result.data;
         if (result.status == false) {
             setVerified(2);

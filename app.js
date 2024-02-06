@@ -8,8 +8,7 @@ const verifyToken = require('./middlewares/verifyToken')
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 app.use(express.urlencoded({ extended: false, limit: "50mb" }))
-// app.use(express.static(path.join(__dirname, 'frontend.html')))
-
+app.use(express.static(path.join(__dirname, 'public')))
 
 const { doesServe, getMerchants, updateMerchant, getAllPincodes, verifyUnique } = require('./controllers/some');
 const { addMerchant, doLogin } = require('./controllers/authentications');
@@ -25,6 +24,9 @@ app.post("/addMerchant", addMerchant)
 app.post("/doLogin", doLogin);
 app.post("/updateMerchantDetails", verifyToken, updateMerchant);
 app.post("/verifyUnique", verifyUnique);
+app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 //Start up the server
 app.listen(8000, () => {
     console.log('Server is running on port 8000');

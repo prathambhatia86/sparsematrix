@@ -5,6 +5,7 @@ import PincodeItem from "./DataItem";
 import { MdSave } from "react-icons/md";
 import { IoAddCircleOutline } from "react-icons/io5";
 export default function AddPincode() {
+    const api="";
     //Variables for pagination
     const headers = {
         'Authorization': sessionStorage.token,
@@ -21,7 +22,7 @@ export default function AddPincode() {
         let getPincodes = async () => {
 
             console.log(headers)
-            let existingPincodes = await axios.post("http://localhost:8000/getPincodesForMerchant", {}, { headers });
+            let existingPincodes = await axios.post(`${api}/getPincodesForMerchant`, {}, { headers });
             existingPincodes = await JSON.parse(existingPincodes.data);
             alterCurrentPincodes(existingPincodes);
 
@@ -65,7 +66,7 @@ export default function AddPincode() {
             "addedPins": addedPinsArray,
             "delPins": delPinsArray
         }
-        await axios.post("http://localhost:8000/updateMerchantDetails", data, { headers });
+        await axios.post(`${api}/updateMerchantDetails`, data, { headers });
         if (currentPincodes.length > 10 * paginationWasteState) changeAllowNext(true);
         else changeAllowNext(false);
 

@@ -8,6 +8,7 @@ export default function MerchantLogin() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [location, setLocation] = useLocation();
+	const api="";
 	const handleUsernameChange = (e) => {
 		setUsername(e.target.value);
 	};
@@ -20,7 +21,7 @@ export default function MerchantLogin() {
 			"username": username,
 			"password": password
 		}
-		let result = await axios.post("http://localhost:8000/doLogin", data);
+		let result = await axios.post(`${api}/doLogin`, data);
 		console.log(result);
 		if (result.data.track == "correct") {
 			console.log(result.data.token);

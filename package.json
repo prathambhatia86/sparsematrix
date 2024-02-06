@@ -4,7 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-backend":"npm i",
+    "install-frontend":"cd frontend &&npm i",
+    "installs":"npm run install-backend && npm run install-frontend",
+    "start":"node app.js"
   },
   "author": "",
   "license": "ISC",
